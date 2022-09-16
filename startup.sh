@@ -5,7 +5,7 @@ sleep 0.5
 ./setup-k8s.sh > /dev/null 2>&1
 # kubectl cluster-info > /dev/null 2>&1
 echo -e "\nCloning Course Repo"
-git clone https://github.com/kong-education/kong-mesh-ops.git > /dev/null 2>&1 && cd kong-mesh-ops
+git clone https://github.com/kong-education/KMIL-101.git > /dev/null 2>&1 && cd KMIL-101
 sleep 0.5
 echo -e "\nDeploying Marketplace Application...."
 kubectl apply -f 03/01-kong-mesh-demo-aio.yaml > /dev/null 2>&1
@@ -24,4 +24,4 @@ echo -e "\nNow browse to $KONG_MESH_DEMO"
 # undo
 # kubectl delete -f 03/01-kong-mesh-demo-aio.yaml
 # cd
-# rm -rf kong-mesh-ops
+# rm -rf KMIL-101

@@ -1,0 +1,13 @@
+apiVersion: kuma.io/v1alpha1
+kind: TrafficPermission
+mesh: default
+metadata:
+  namespace: kong-mesh-demo
+  name: netshoot-to-mockbin
+spec:
+  sources:
+  - match:
+      kuma.io/service: netshoot_kong-mesh-demo_svc
+  destinations:
+  - match:
+      kuma.io/service: mockbin

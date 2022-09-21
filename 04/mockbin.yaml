@@ -1,0 +1,14 @@
+apiVersion: kuma.io/v1alpha1
+kind: ExternalService
+mesh: default
+metadata:
+  name: mockbin
+  namespace: kong-mesh-demo
+spec:
+  tags:
+    kuma.io/service: mockbin
+    kuma.io/protocol: http
+  networking:
+    address: mockbin.org:443
+    tls:
+      enabled: true

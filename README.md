@@ -1,1 +1,1 @@
-# kong-mesh-foundations
+# Kong Mesh Foundations

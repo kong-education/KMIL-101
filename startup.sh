@@ -15,17 +15,12 @@ kubectl wait --for=condition=available --timeout=600s deployment/kong-mesh-demo-
 kubectl wait --for=condition=available --timeout=600s deployment/redis-master -n kong-mesh-demo
 kubectl wait --for=condition=available --timeout=600s deployment/postgres-master -n kong-mesh-demo
 # kubectl get pods -n kong-mesh-demo
-sleep 0.5
-echo -e "\nExposing ports"
-kubectl port-forward svc/frontend -n kong-mesh-demo --address 0.0.0.0 8080:8080 > /dev/null 2>&1 &
+sleep 3
+# echo -e "\nExposing ports"
+# kubectl port-forward svc/frontend -n kong-mesh-demo --address 0.0.0.0 8080:8080
 # export KONG_MESH_DEMO=https://${AVL_PRIMARY_CONTAINER_EXTERNAL_DOMAIN#?}
 sleep 0.5
 # echo -e "\nNow browse to $KONG_MESH_DEMO"
-
-echo -e "\nNow click on 'Marketplace Application' tab in the lab environment"
-
-echo -e "\nAlternatively browse to $KONG_MESH_DEMO"
-
 # undo
 # kubectl delete -f 03/01-kong-mesh-demo-aio.yaml
 # cd
@@ -55,6 +50,11 @@ curl -sX GET $KONG_MESH_URI | jq
 
 kubectl get deployments -n kong-mesh-demo -o name | sed -e 's/.*\///g' | xargs -I {} kubectl patch deployment -n kong-mesh-demo {} --type='strategic' --patch='{"spec":{"template":{"metadata":{"labels":{"kuma.io/sidecar-injection":"enabled"}}}}}'
 
-kill $(jobs -l|grep svc/frontend |awk -F" " '{print $2}')
+# kill $(jobs -l|grep svc/frontend |awk -F" " '{print $2}')
 
-kubectl port-forward svc/frontend -n kong-mesh-demo --address 0.0.0.0 8080:8080 > /dev/null 2>&1 &
+echo -e "\nExposing ports"
+kubectl port-forward svc/frontend -n kong-mesh-demo --address 0.0.0.0 8080:8080
+
+echo -e "\nNow click on 'Marketplace Application' tab in the lab environment"
+
+echo -e "\nAlternatively browse to $KONG_MESH_DEMO"

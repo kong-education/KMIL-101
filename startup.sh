@@ -1,12 +1,13 @@
 #!/bin/bash
 
-echo -e "\nConfiguring Kubernetes"
-sleep 0.5
-./setup-k8s.sh > /dev/null 2>&1
-# kubectl cluster-info > /dev/null 2>&1
-echo -e "\nCloning Course Repo"
-git clone https://github.com/kong-education/KMIL-101.git > /dev/null 2>&1 && cd KMIL-101
-sleep 0.5
+# echo -e "\nConfiguring Kubernetes"
+# sleep 0.5
+# ./setup-k8s.sh > /dev/null 2>&1
+# # kubectl cluster-info > /dev/null 2>&1
+
+# echo -e "\nCloning Course Repo"
+# git clone https://github.com/kong-education/KMIL-101.git > /dev/null 2>&1 && cd KMIL-101
+# sleep 0.5
 echo -e "\nDeploying Marketplace Application...."
 kubectl apply -f 03/01-kong-mesh-demo-aio.yaml > /dev/null 2>&1
 kubectl wait --for=condition=available --timeout=600s deployment/kuma-demo-app -n kong-mesh-demo

@@ -1,5 +1,11 @@
 #!/bin/bash
 
+until [ -f /home/ubuntu/.initcomplete ]
+do
+  sleep 2
+  echo "Waiting for vm to initialise"
+done
+
 # echo -e "\nConfiguring Kubernetes"
 # sleep 0.5
 # ./setup-k8s.sh > /dev/null 2>&1
@@ -29,6 +35,7 @@ sleep 0.5
 echo -e "\nDeploying Kong Mesh"
 
 curl -sLX GET https://docs.konghq.com/mesh/installer.sh | VERSION="1.9.0" sh -
+# sudo mv $(find . -iname kumactl) /usr/local/bin
 mkdir -p ~/.local/bin
 mv $(find . -iname kumactl) ~/.local/bin/
 source ~/.profile
@@ -53,7 +60,7 @@ kubectl get deployments -n kong-mesh-demo -o name | sed -e 's/.*\///g' | xargs -
 # kill $(jobs -l|grep svc/frontend |awk -F" " '{print $2}')
 
 echo -e "\nExposing ports"
-kubectl port-forward svc/frontend -n kong-mesh-demo --address 0.0.0.0 8080:8080
+kubectl port-forward svc/frontend -n kong-mesh-demo --address 0.0.0.0 8080:8080 > /dev/null 2>&1 &
 
 echo -e "\nNow click on 'Marketplace Application' tab in the lab environment"
 

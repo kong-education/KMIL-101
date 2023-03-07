@@ -18,9 +18,13 @@ kubectl wait --for=condition=available --timeout=600s deployment/postgres-master
 sleep 0.5
 echo -e "\nExposing ports"
 kubectl port-forward svc/frontend -n kong-mesh-demo --address 0.0.0.0 8080:8080 > /dev/null 2>&1 &
-export KONG_MESH_DEMO=https://${AVL_PRIMARY_CONTAINER_EXTERNAL_DOMAIN#?}
+# export KONG_MESH_DEMO=https://${AVL_PRIMARY_CONTAINER_EXTERNAL_DOMAIN#?}
 sleep 0.5
-echo -e "\nNow browse to $KONG_MESH_DEMO"
+# echo -e "\nNow browse to $KONG_MESH_DEMO"
+
+echo -e "\nNow click on 'Marketplace Application' tab in the lab environment"
+
+echo -e "\nAlternatively browse to $KONG_MESH_DEMO"
 
 # undo
 # kubectl delete -f 03/01-kong-mesh-demo-aio.yaml

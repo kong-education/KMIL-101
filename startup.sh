@@ -30,3 +30,31 @@ echo -e "\nAlternatively browse to $KONG_MESH_DEMO"
 # kubectl delete -f 03/01-kong-mesh-demo-aio.yaml
 # cd
 # rm -rf KMIL-101
+
+echo -e "\nDeploying Kong Mesh"
+
+curl -sLX GET https://docs.konghq.com/mesh/installer.sh | VERSION="1.9.0" sh -
+mkdir -p ~/.local/bin
+mv $(find . -iname kumactl) ~/.local/bin/
+source ~/.profile
+kumactl install control-plane --license-path=/etc/kong/license.json|kubectl apply -f -
+
+sleep 5
+
+echo -e "\nConfiguring Kong Mesh"
+
+kubectl expose deployment kong-mesh-control-plane -n kong-mesh-system \
+  --type=NodePort --name=kongmesh-cp --port 5681
+kubectl patch service kongmesh-cp --namespace=kong-mesh-system  --type='json' \
+ --patch='[{"op": "replace", "path": "/spec/ports/0/nodePort", "value":30001}]'
+
+sleep 2
+kumactl config control-planes add --name=kongmesh-cp --address=$KONG_MESH_URI
+
+curl -sX GET $KONG_MESH_URI | jq
+
+kubectl get deployments -n kong-mesh-demo -o name | sed -e 's/.*\///g' | xargs -I {} kubectl patch deployment -n kong-mesh-demo {} --type='strategic' --patch='{"spec":{"template":{"metadata":{"labels":{"kuma.io/sidecar-injection":"enabled"}}}}}'
+
+kill $(jobs -l|grep svc/frontend |awk -F" " '{print $2}')
+
+kubectl port-forward svc/frontend -n kong-mesh-demo --address 0.0.0.0 8080:8080 > /dev/null 2>&1 &
